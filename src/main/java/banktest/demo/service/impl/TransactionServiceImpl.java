@@ -1,6 +1,5 @@
 package banktest.demo.service.impl;
 
-import banktest.demo.exception.AccountNotFindException;
 import banktest.demo.model.Account;
 import banktest.demo.model.Transaction;
 import banktest.demo.repository.TransactionRepository;
