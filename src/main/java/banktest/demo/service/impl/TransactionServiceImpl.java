@@ -1,6 +1,6 @@
 package banktest.demo.service.impl;
 
-import banktest.demo.exception.NotEnoughMoneyException;
+import banktest.demo.exception.AccountNotFindException;
 import banktest.demo.model.Account;
 import banktest.demo.model.Transaction;
 import banktest.demo.repository.TransactionRepository;
@@ -22,8 +22,8 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     @Transactional
     public void save(Transaction transaction) {
-        Account fromAccount = transaction.getFromAccount();
-        Account toAccount = transaction.getToAccount();
+        Account fromAccount = accountService.get(transaction.getFromAccount().getNumber());
+        Account toAccount = accountService.get(transaction.getToAccount().getNumber());
         Double amount = transaction.getAmount();
         transaction.setTimestamp(LocalDateTime.now());
         transaction.setFromAccount(fromAccount);
@@ -31,12 +31,11 @@ public class TransactionServiceImpl implements TransactionService {
         transaction.setAmount(amount);
         if (fromAccount.getBalance() < amount) {
             transaction.setIsComplete(false);
-            throw new NotEnoughMoneyException("Account with number " + fromAccount.getNumber()
-                    + " don't have enough money");
         }
         fromAccount.setBalance(fromAccount.getBalance() - amount);
         toAccount.setBalance(toAccount.getBalance() - amount);
         transaction.setIsComplete(true);
+        accountService.save(toAccount);
         accountService.save(fromAccount);
         transactionRepository.save(transaction);
     }

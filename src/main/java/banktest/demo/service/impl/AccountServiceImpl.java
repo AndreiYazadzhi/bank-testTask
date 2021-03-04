@@ -1,5 +1,6 @@
 package banktest.demo.service.impl;
 
+import banktest.demo.exception.AccountNotFindException;
 import banktest.demo.model.Account;
 import banktest.demo.repository.AccountRepository;
 import banktest.demo.repository.ClientRepository;
@@ -23,21 +24,21 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account get(Long id) {
         return accountRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException(
+                .orElseThrow(() -> new AccountNotFindException(
                 "Could not find account with id " + id + " in DB"));
     }
 
     @Override
     public void delete(Long id) {
         accountRepository.delete(accountRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException(
+                .orElseThrow(() -> new AccountNotFindException(
                 "Could not find user with id " + id + " in DB")));
     }
 
     @Override
     public List<Account> findByClientId(Long id) {
         return accountRepository.findAccountsByClient(clientRepository.findById(id).orElseThrow(()
-                -> new NoSuchElementException("Could not find transactions with client id "
+                -> new AccountNotFindException("Could not find transactions with client id "
                 + id + " in DB")));
     }
 }
