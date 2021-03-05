@@ -25,8 +25,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public void delete(Long id) {
-        clientRepository.delete(clientRepository.findById(id).orElseThrow(()
-                -> new NoSuchElementException("Could not find user with id " + id + " in DB")));
+        clientRepository.deleteById(id);
     }
 
     @Override

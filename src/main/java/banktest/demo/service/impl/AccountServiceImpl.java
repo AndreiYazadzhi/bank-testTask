@@ -1,12 +1,11 @@
 package banktest.demo.service.impl;
 
-import banktest.demo.exception.AccountNotFindException;
+import banktest.demo.exception.EntityNotFoundException;
 import banktest.demo.model.Account;
 import banktest.demo.repository.AccountRepository;
 import banktest.demo.repository.ClientRepository;
 import banktest.demo.service.AccountService;
 import java.util.List;
-import java.util.NoSuchElementException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,21 +23,19 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account get(Long id) {
         return accountRepository.findById(id)
-                .orElseThrow(() -> new AccountNotFindException(
+                .orElseThrow(() -> new EntityNotFoundException(
                 "Could not find account with id " + id + " in DB"));
     }
 
     @Override
     public void delete(Long id) {
-        accountRepository.delete(accountRepository.findById(id)
-                .orElseThrow(() -> new AccountNotFindException(
-                "Could not find user with id " + id + " in DB")));
+        accountRepository.deleteById(id);
     }
 
     @Override
     public List<Account> findByClientId(Long id) {
         return accountRepository.findAccountsByClient(clientRepository.findById(id).orElseThrow(()
-                -> new AccountNotFindException("Could not find transactions with client id "
+                -> new EntityNotFoundException("Could not find transactions with client id "
                 + id + " in DB")));
     }
 }
