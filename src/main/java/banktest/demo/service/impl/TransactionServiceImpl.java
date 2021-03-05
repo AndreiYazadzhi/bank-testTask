@@ -21,10 +21,10 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     @Transactional
     public void save(Transaction transaction) {
+        transaction.setTimestamp(LocalDateTime.now());
+        Double amount = transaction.getAmount();
         Account fromAccount = transaction.getFromAccount();
         Account toAccount = transaction.getToAccount();
-        Double amount = transaction.getAmount();
-        transaction.setTimestamp(LocalDateTime.now());
         if (fromAccount.getBalance() < amount) {
             transaction.setIsComplete(false);
             return;
